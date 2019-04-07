@@ -3505,6 +3505,9 @@ static void M_Quit_Key (int key)
 
 	case 'Y':
 	case 'y':
+#ifdef __ANDROID__
+    case K_ENTER:
+#endif
 		Key_SetDest (key_console);
 		Host_Quit_f ();
 		break;

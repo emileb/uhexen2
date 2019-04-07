@@ -981,6 +981,10 @@ static void SCR_DrawNotifyString (void)
 	Plaque_Draw(scr_notifystring, true);
 }
 
+#ifdef __ANDROID__
+int android_Y_N = 0;
+#endif
+
 /*
 ==================
 SCR_ModalMessage
@@ -1004,13 +1008,22 @@ int SCR_ModalMessage (const char *text)
 	scr_drawdialog = false;
 
 	S_ClearBuffer ();		// so dma doesn't loop current sound
-
+#ifdef __ANDROID__
+     android_Y_N = 1;
+#endif
 	do
 	{
 		key_count = -1;		// wait for a key down and up
 		Sys_SendKeyEvents ();
+#ifdef __ANDROID__ // Need to update screen for touch controls to work
+        scr_drawdialog = true;
+        SCR_UpdateScreen ();
+        scr_drawdialog = false;
+#endif
 	} while (key_lastpress != 'y' && key_lastpress != 'n' && key_lastpress != K_ESCAPE);
-
+#ifdef __ANDROID__
+     android_Y_N = 0;
+#endif
 	scr_fullupdate = 0;
 	SCR_UpdateScreen ();
 

@@ -456,6 +456,7 @@ IN_StartupJoystick
 */
 static void IN_StartupJoystick (void)
 {
+#ifndef __ANDROID__
 	int	i;
 
 	if (safemode || COM_CheckParm ("-nojoy"))
@@ -484,6 +485,7 @@ static void IN_StartupJoystick (void)
 	trackballactive = true;
 	if (in_joystick.integer)
 		IN_Callback_JoyIndex(&joy_index);
+#endif
 }
 
 static void IN_Callback_JoyEnable (cvar_t *var)
@@ -502,6 +504,7 @@ static void IN_Callback_JoyEnable (cvar_t *var)
 
 static void IN_Callback_JoyIndex (cvar_t *var)
 {
+#ifndef __ANDROID__
 	int idx = var->integer;
 
 #if (JOY_KEYEVENT_FOR_AXES)
@@ -543,6 +546,7 @@ static void IN_Callback_JoyIndex (cvar_t *var)
 				SDL_JoystickGetAxis(joy_id, idx);
 		}
 	}
+#endif
 }
 
 static void IN_JoyTrackballMove (int *ballx, int *bally)
@@ -826,6 +830,14 @@ void IN_SendKeyEvents (void)
 	{
 		switch (event.type)
 		{
+#ifdef __ANDROID__ // We are using SDL 2
+	    case SDL_WINDOWEVENT_FOCUS_GAINED:
+				S_UnblockSound();
+				break;
+        case SDL_WINDOWEVENT_FOCUS_LOST:
+				S_BlockSound();
+				break;
+#else
 		case SDL_ACTIVEEVENT:
 			if (event.active.state & (SDL_APPINPUTFOCUS|SDL_APPACTIVE))
 			{
@@ -834,7 +846,7 @@ void IN_SendKeyEvents (void)
 				else	S_BlockSound();
 			}
 			break;
-
+#endif
 		case SDL_KEYDOWN:
 			if ((event.key.keysym.sym == SDLK_RETURN) &&
 			    (event.key.keysym.mod & KMOD_ALT))
@@ -860,7 +872,7 @@ void IN_SendKeyEvents (void)
 			sym = event.key.keysym.sym;
 			state = event.key.state;
 			modstate = SDL_GetModState();
-
+#ifndef __ANDROID__ // Because of  SDL2 compat layer unicode does not work properly, disable this
 			if (event.key.keysym.unicode != 0)
 			{
 				if ((event.key.keysym.unicode & 0xFF80) == 0)
@@ -888,7 +900,7 @@ void IN_SendKeyEvents (void)
 				/* else: it's an international character */
 			}
 			/*printf("You pressed %s (%d) (%c)\n", SDL_GetKeyName(sym), sym, sym);*/
-
+#endif
 			switch (sym)
 			{
 			case SDLK_DELETE:
@@ -1070,7 +1082,7 @@ void IN_SendKeyEvents (void)
 					sym = 0;
 				else	sym = SDLK_EQUALS;
 				break;
-			case 178: /* the '²' key */
+			case 178: /* the 'ï¿½' key */
 				sym = '~';
 				break;
 			default:

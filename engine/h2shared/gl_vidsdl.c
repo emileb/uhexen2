@@ -136,7 +136,11 @@ qboolean	in_mode_set = false;
 // cvar vid_mode must be set before calling
 // VID_SetMode, VID_ChangeVideoMode or VID_Restart_f
 static cvar_t	vid_mode = {"vid_mode", "0", CVAR_NONE};
+#ifdef __ANDROID__
+static cvar_t	vid_config_consize = {"vid_config_consize", "850", CVAR_ARCHIVE};
+#else
 static cvar_t	vid_config_consize = {"vid_config_consize", "640", CVAR_ARCHIVE};
+#endif
 static cvar_t	vid_config_glx = {"vid_config_glx", "640", CVAR_ARCHIVE};
 static cvar_t	vid_config_gly = {"vid_config_gly", "480", CVAR_ARCHIVE};
 static cvar_t	vid_config_fscr= {"vid_config_fscr", "0", CVAR_ARCHIVE};
@@ -440,6 +444,12 @@ static qboolean VID_SetMode (int modenum)
 		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
 		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, multisample);
 	}
+
+#ifdef __ANDROID__
+	//SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+	//SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+	//SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+#endif
 
 	Con_SafePrintf ("Requested mode %d: %dx%dx%d\n", modenum, modelist[modenum].width, modelist[modenum].height, bpp);
 
@@ -883,16 +893,39 @@ static qboolean GL_OpenLibrary (const char *name)
 }
 #endif	/* GL_DLSYM */
 
+#ifdef __ANDROID__
+#include <dlfcn.h>
+#endif
 
 #ifdef GL_DLSYM
 static void GL_Init_Functions (void)
 {
+#ifdef __ANDROID__
+    static void* h = NULL;
+
+    if( h == NULL )
+    {
+        h = dlopen("libGL4ES.so", RTLD_LAZY | RTLD_LOCAL);
+    }
+
+#define GL_FUNCTION(ret, func, params)				\
+    do {							\
+	func##_fp = (func##_f) dlsym(h, #func);	\
+	if (func##_fp == NULL)					\
+		Sys_Error("%s not found in GL library", #func);	\
+    } while (0);
+
+#else
+
 #define GL_FUNCTION(ret, func, params)				\
     do {							\
 	func##_fp = (func##_f) SDL_GL_GetProcAddress(#func);	\
 	if (func##_fp == NULL)					\
 		Sys_Error("%s not found in GL library", #func);	\
     } while (0);
+
+#endif
+
 #define GL_FUNCTION_OPT(ret, func, params)
 #include "gl_func.h"
 }

@@ -24,6 +24,11 @@
 #ifndef __QUAKEDEFS_H
 #define __QUAKEDEFS_H
 
+#ifdef __ANDROID__
+#include <android/log.h>
+#define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO,"UHEXEN", __VA_ARGS__))
+#endif
+
 #define __STRINGIFY(x) #x
 #define STRINGIFY(x) __STRINGIFY(x)
 

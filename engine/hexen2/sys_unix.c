@@ -335,6 +335,9 @@ void Sys_Error (const char *error, ...)
 	q_vsnprintf (text, sizeof(text), error, argptr);
 	va_end (argptr);
 
+#ifdef __ANDROID__
+    LOGI("ERROR: %s",text);
+#endif
 	if (con_debuglog)
 	{
 		LOG_Print (ERROR_PREFIX);
@@ -358,6 +361,9 @@ void Sys_Error (const char *error, ...)
 
 void Sys_PrintTerm (const char *msgtxt)
 {
+#ifdef __ANDROID__
+    LOGI("%s",msgtxt);
+#endif
 	const unsigned char	*p;
 
 	if (sys_nostdout.integer)
@@ -543,6 +549,10 @@ static int UNIX_GetBasedir (char *argv0, char *dst, size_t dstsize)
 #if DO_USERDIRS
 static int Sys_GetUserdir (char *dst, size_t dstsize)
 {
+#ifdef __ANDROID__
+    q_snprintf (dst, dstsize, ".hexen2");
+    return 0;
+#endif
 	size_t		n;
 	const char	*home_dir = NULL;
 	struct passwd	*pwent;
@@ -678,7 +688,11 @@ static char	userdir[MAX_OSPATH];
 static Uint8		appState;
 #endif
 
+#ifdef __ANDROID__
+int main_android (int argc, char **argv)
+#else
 int main (int argc, char **argv)
+#endif
 {
 	int			i;
 	double		time, oldtime, newtime;

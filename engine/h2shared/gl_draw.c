@@ -598,6 +598,9 @@ void Draw_Character (int x, int y, unsigned int num)
 	glTexCoord2f_fp (fcol, frow + ysize);
 	glVertex2f_fp (x, y+8);
 	glEnd_fp ();
+#ifdef __ANDROID__ // Force draw, batch QUADS not working properly
+    GL_Bind (0);
+#endif
 }
 
 /*
