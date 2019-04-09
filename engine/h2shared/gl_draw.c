@@ -664,6 +664,9 @@ void Draw_Crosshair (void)
 		glVertex2f_fp (x - 7, y + 9);
 
 		glEnd_fp ();
+#ifdef __ANDROID__ // Force draw, batch QUADS not working properly
+    GL_Bind (0);
+#endif
 		glTexEnvf_fp (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 	}
 	else if (crosshair.integer)
@@ -729,6 +732,9 @@ void Draw_SmallCharacter (int x, int y, int num)
 	glTexCoord2f_fp (fcol, frow + ysize);
 	glVertex2f_fp (x, y+8);
 	glEnd_fp ();
+#ifdef __ANDROID__ // Force draw, batch QUADS not working properly
+    GL_Bind (0);
+#endif
 }
 
 //==========================================================================
@@ -778,6 +784,9 @@ void Draw_BigCharacter (int x, int y, int num)
 	glTexCoord2f_fp (fcol, frow + ysize);
 	glVertex2f_fp (x, y+20);
 	glEnd_fp ();
+#ifdef __ANDROID__ // Force draw, batch QUADS not working properly
+    GL_Bind (0);
+#endif
 }
 
 
@@ -1013,6 +1022,9 @@ void Draw_PicCropped (int x, int y, qpic_t *pic)
 	glTexCoord2f_fp (gl->sl, th);
 	glVertex2f_fp (x, y+height);
 	glEnd_fp ();
+#ifdef __ANDROID__ // GL_QUADS not working correctly, flush with this
+	GL_Bind (0);
+#endif
 }
 
 void Draw_SubPicCropped (int x, int y, int h, qpic_t *pic)

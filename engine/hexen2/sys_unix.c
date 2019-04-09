@@ -376,7 +376,9 @@ void Sys_PrintTerm (const char *msgtxt)
 void Sys_Quit (void)
 {
 	Host_Shutdown();
-
+#ifdef __ANDROID__ // Wait for a bit, may stop crashing out
+    usleep( 1000 * 100 );
+#endif
 	exit (0);
 }
 

@@ -154,10 +154,16 @@ void PortableAction(int state, int action)
                 PortableCommand("-moveup");
             break;
         case PORT_ACT_DOWN:
+        /*
             if(state)
                 PortableCommand("+movedown");
             else
                 PortableCommand("-movedown");
+        */
+            if(state)
+                PortableCommand("+crouch");
+            else
+                PortableCommand("-crouch");
             break;
         case PORT_ACT_WEAP1:
             if ( state )
