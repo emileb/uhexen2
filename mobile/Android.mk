@@ -113,8 +113,8 @@ LOCAL_SRC_FILES :=	../mobile/game_interface.c \
                     h2shared/sys_sdl.c \
 
 LOCAL_LDLIBS := -lEGL -ldl -llog -lOpenSLES -lz -lGLESv1_CM
-LOCAL_STATIC_LIBRARIES := sigc libzip libpng logwritter license_static freetype2-static libjpeg libmad timidity
-LOCAL_SHARED_LIBRARIES := touchcontrols SDL2 SDL2_mixer
+LOCAL_STATIC_LIBRARIES := sigc libzip libpng logwritter  freetype2-static libjpeg libmad timidity
+LOCAL_SHARED_LIBRARIES := touchcontrols SDL2 SDL2_mixer core_shared
 
 include $(BUILD_SHARED_LIBRARY)
 
