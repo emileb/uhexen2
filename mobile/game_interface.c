@@ -384,6 +384,10 @@ void IN_Move_Android (usercmd_t *cmd)
 		quickCommand = 0;
 	}
 
+    int blockGamepad( void );
+    if( blockGamepad() )
+        return;
+
 	cmd->forwardmove += forwardmove * cl_forwardspeed.value * 2; //Always run! (x2)
 	cmd->sidemove  += sidemove   * cl_sidespeed.value * 2;
 
