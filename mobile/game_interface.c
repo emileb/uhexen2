@@ -44,8 +44,7 @@ void PortableAction(int state, int action)
 
 	if ((action >= PORT_ACT_CUSTOM_0) && (action <= PORT_ACT_CUSTOM_15))
     {
-        if( action <= PORT_ACT_CUSTOM_7 )
-            PortableKeyEvent(state, SDL_SCANCODE_H + action - PORT_ACT_CUSTOM_0, 0);
+        PortableKeyEvent(state, SDL_SCANCODE_H + action - PORT_ACT_CUSTOM_0, 0);
     }
 
 	if (( PortableGetScreenMode() == TS_MENU ) || ( PortableGetScreenMode() == TS_BLANK )  || ( PortableGetScreenMode() == TS_Y_N ))
@@ -390,8 +389,8 @@ void IN_Move_Android (usercmd_t *cmd)
 
     if( !blockMove )
     {
-	    cmd->forwardmove += forwardmove * cl_forwardspeed.value * 2; //Always run! (x2)
-	    cmd->sidemove  += sidemove   * cl_sidespeed.value * 2;
+	    cmd->forwardmove += forwardmove * cl_forwardspeed.value;
+	    cmd->sidemove  += sidemove   * cl_sidespeed.value;
     }
 
     if( !blockLook )
