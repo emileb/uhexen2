@@ -79,6 +79,11 @@ static void SDLCALL paint_audio (void *unused, Uint8 *stream, int len)
 		shm->samplepos = 0;
 }
 
+#ifdef __ANDROID__
+extern int AUDIO_OVERRIDE_FREQ;
+extern int AUDIO_OVERRIDE_SAMPLES;
+#endif
+
 static qboolean S_SDL_Init (dma_t *dma)
 {
 	SDL_AudioSpec desired, obtained;
@@ -107,6 +112,14 @@ static qboolean S_SDL_Init (dma_t *dma)
 		desired.samples = 4096; /* for 96 kHz */
 	desired.callback = paint_audio;
 	desired.userdata = NULL;
+
+#ifdef __ANDROID__
+    if (AUDIO_OVERRIDE_FREQ != 0)
+        desired.freq = AUDIO_OVERRIDE_FREQ;
+
+    if (AUDIO_OVERRIDE_SAMPLES != 0)
+        desired.samples = AUDIO_OVERRIDE_SAMPLES;
+#endif
 
 	/* Open the audio device */
 	if (SDL_OpenAudio(&desired, &obtained) == -1)
