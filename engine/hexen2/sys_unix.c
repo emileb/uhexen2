@@ -552,7 +552,7 @@ static int UNIX_GetBasedir (char *argv0, char *dst, size_t dstsize)
 static int Sys_GetUserdir (char *dst, size_t dstsize)
 {
 #ifdef __ANDROID__
-    q_snprintf (dst, dstsize, ".hexen2");
+    q_snprintf (dst, dstsize, "%s/hexen2", getenv("USER_FILES"));
     return 0;
 #endif
 	size_t		n;
