@@ -28,6 +28,7 @@ LOCAL_C_INCLUDES :=     $(SDL_INCLUDE_PATHS)  \
 LOCAL_SRC_FILES :=	../mobile/game_interface.c \
                     ../../../Clibs_OpenTouch/quake/android_jni.cpp \
                     ../../../Clibs_OpenTouch/quake/touch_interface.cpp \
+                    ../../../Clibs_OpenTouch/touch_interface_base.cpp \
                     h2shared/gl_refrag.c \
                   	h2shared/gl_rlight.c \
                   	hexen2/gl_rmain.c \
