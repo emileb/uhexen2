@@ -37,6 +37,22 @@ int PortableKeyEvent(int state, int code ,int unitcode)
 	return 0;
 }
 
+extern kbutton_t	in_mlook, in_klook;
+extern kbutton_t	in_left, in_right, in_forward, in_back;
+extern kbutton_t	in_lookup, in_lookdown, in_moveleft, in_moveright;
+extern kbutton_t	in_strafe, in_speed, in_use, in_jump, in_attack;
+extern kbutton_t	in_up, in_down, in_crouch;
+extern kbutton_t	in_infoplaque;
+
+void KeyUpPort (kbutton_t *b)
+{
+	b->state = 4; 		// impulse up
+}
+void KeyDownPort (kbutton_t *b)
+{
+	b->state |= 1 + 2; // down + impulse down
+}
+
 static int scoresShown = 0;
 void PortableAction(int state, int action)
 {
@@ -68,101 +84,50 @@ void PortableAction(int state, int action)
     {
         switch (action)
         {
-        case PORT_ACT_LEFT:
-            if(state)
-                PortableCommand("+left");
-            else
-                PortableCommand("-left");
-        break;
+       case PORT_ACT_LEFT:
+            (state)?KeyDownPort(&in_left):KeyUpPort(&in_left);
+            break;
         case PORT_ACT_RIGHT:
-            if(state)
-                PortableCommand("+right");
-            else
-                PortableCommand("-right");
+            (state)?KeyDownPort(&in_right):KeyUpPort(&in_right);
             break;
         case PORT_ACT_FWD:
-            if(state)
-                PortableCommand("+forward");
-            else
-                PortableCommand("-forward");
+            (state)?KeyDownPort(&in_forward):KeyUpPort(&in_forward);
             break;
         case PORT_ACT_BACK:
-            if(state)
-                PortableCommand("+back");
-            else
-                PortableCommand("-back");
+            (state)?KeyDownPort(&in_back):KeyUpPort(&in_back);
             break;
         case PORT_ACT_LOOK_UP:
-            if(state)
-                PortableCommand("+lookup");
-            else
-                PortableCommand("-lookup");
+            (state)?KeyDownPort(&in_lookup):KeyUpPort(&in_lookup);
             break;
         case PORT_ACT_LOOK_DOWN:
-            if(state)
-                PortableCommand("+lookdown");
-            else
-                PortableCommand("-lookdown");
+            (state)?KeyDownPort(&in_lookdown):KeyUpPort(&in_lookdown);
             break;
         case PORT_ACT_MOVE_LEFT:
-            if(state)
-                PortableCommand("+moveleft");
-            else
-                PortableCommand("-moveleft");
+            (state)?KeyDownPort(&in_moveleft):KeyUpPort(&in_moveleft);
             break;
         case PORT_ACT_MOVE_RIGHT:
-            if(state)
-                PortableCommand("+moveright");
-            else
-                PortableCommand("-moveright");
+            (state)?KeyDownPort(&in_moveright):KeyUpPort(&in_moveright);
             break;
         case PORT_ACT_STRAFE:
-            if(state)
-                PortableCommand("+strafe");
-            else
-                PortableCommand("-strafe");
+            (state)?KeyDownPort(&in_strafe):KeyUpPort(&in_strafe);
             break;
         case PORT_ACT_SPEED:
-            if(state)
-                PortableCommand("+speed");
-            else
-                PortableCommand("-speed");
+            (state)?KeyDownPort(&in_speed):KeyUpPort(&in_speed);
             break;
         case PORT_ACT_USE:
-            if(state)
-                PortableCommand("+use");
-            else
-                PortableCommand("-use");
+            (state)?KeyDownPort(&in_use):KeyUpPort(&in_use);
             break;
         case PORT_ACT_JUMP:
-            if(state)
-                PortableCommand("+jump");
-            else
-                PortableCommand("-jump");
+            (state)?KeyDownPort(&in_jump):KeyUpPort(&in_jump);
             break;
         case PORT_ACT_ATTACK:
-            if(state)
-                PortableCommand("+attack");
-            else
-                PortableCommand("-attack");
+            (state)?KeyDownPort(&in_attack):KeyUpPort(&in_attack);
             break;
         case PORT_ACT_UP:
-            if(state)
-                PortableCommand("+moveup");
-            else
-                PortableCommand("-moveup");
+            (state)?KeyDownPort(&in_up):KeyUpPort(&in_up);
             break;
         case PORT_ACT_DOWN:
-        /*
-            if(state)
-                PortableCommand("+movedown");
-            else
-                PortableCommand("-movedown");
-        */
-            if(state)
-                PortableCommand("+crouch");
-            else
-                PortableCommand("-crouch");
+            (state)?KeyDownPort(&in_crouch):KeyUpPort(&in_crouch);
             break;
         case PORT_ACT_WEAP1:
             if ( state )
@@ -207,14 +172,6 @@ void PortableAction(int state, int action)
         case PORT_MALICE_USE:
             if (state)
                 PortableCommand("impulse 13\n");
-            break;
-        case PORT_MALICE_RELOAD:
-            if (state)
-                PortableCommand("impulse 12\n");
-            break;
-        case PORT_MALICE_CYCLE:
-            if (state)
-                PortableCommand("impulse 14\n");
             break;
         // HEXEN 2 ----------------------------
         case PORT_ACT_CROUCH:
