@@ -230,7 +230,9 @@ void PortableAction(int state, int action)
 static const char * quickCommand = 0;
 void PortableCommand(const char * cmd)
 {
-	quickCommand = cmd;
+	static char cmdBuffer[256];
+	snprintf(cmdBuffer, 256, "%s", cmd);
+	quickCommand = cmdBuffer;
 }
 
 
