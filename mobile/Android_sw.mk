@@ -28,6 +28,7 @@ LOCAL_C_INCLUDES :=     $(SDL_INCLUDE_PATHS)  \
 LOCAL_SRC_FILES :=	../mobile/game_interface.c \
                     ../../../Clibs_OpenTouch/quake/android_jni.cpp \
                     ../../../Clibs_OpenTouch/quake/touch_interface.cpp \
+                    ../../../Clibs_OpenTouch/touch_interface_base.cpp \
                   	h2shared/in_sdl.c \
                   	h2shared/bgmusic.c \
                     h2shared/snd_codec.c \
@@ -131,9 +132,9 @@ LOCAL_SRC_FILES :=	../mobile/game_interface.c \
                     	 hexen2/model.c \
                     	 h2shared/no_dxe.c
 
-LOCAL_LDLIBS := -lEGL -ldl -llog -lOpenSLES -lz -lGLESv1_CM
-LOCAL_STATIC_LIBRARIES := sigc libzip libpng logwritter license_static freetype2-static libjpeg libmad timidity
-LOCAL_SHARED_LIBRARIES := touchcontrols SDL2 SDL2_mixer saffal
+LOCAL_LDLIBS := -lEGL -ldl -llog -lOpenSLES -lz
+LOCAL_STATIC_LIBRARIES := sigc libzip libpng logwritter freetype2-static libjpeg libmad timidity
+LOCAL_SHARED_LIBRARIES := touchcontrols SDL2 SDL2_mixer core_shared saffal
 
 include $(BUILD_SHARED_LIBRARY)
 

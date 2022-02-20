@@ -725,8 +725,10 @@ void VID_Init (const unsigned char *palette)
 		Cvar_SetQuick (&vid_config_fscr, "0");
 	}
 
+#ifndef __ANDROID__
 	if (vid_config_fscr.integer && !num_fmodes) // FIXME: see below, as well
 		Sys_Error ("No fullscreen modes available at this color depth");
+#endif
 
 	width = vid_config_swx.integer;
 	height = vid_config_swy.integer;
