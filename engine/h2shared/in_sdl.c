@@ -847,6 +847,16 @@ void IN_SendKeyEvents (void)
 			}
 			break;
 #endif
+#ifdef __ANDROID__
+		case SDL_TEXTINPUT:
+			if (event.text.text[0]) {
+				int symText = event.text.text[0];
+				// Add missing characters here
+				if(symText == '_')
+					Key_Event(symText, 1);
+			}
+			break;
+#endif
 		case SDL_KEYDOWN:
 			if ((event.key.keysym.sym == SDLK_RETURN) &&
 			    (event.key.keysym.mod & KMOD_ALT))
