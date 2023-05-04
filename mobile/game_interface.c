@@ -27,7 +27,7 @@ extern int SDL_SendKeyboardKey(Uint8 state, SDL_Scancode scancode);
 
 int PortableKeyEvent(int state, int code ,int unitcode)
 {
-	LOGI("PortableKeyEvent %d %d",state,code);
+	//LOGI("PortableKeyEvent %d %d",state,code);
 
     if (state)
         SDL_SendKeyboardKey(SDL_PRESSED, (SDL_Scancode)code);
