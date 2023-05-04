@@ -7,6 +7,7 @@
 #include "SDL.h"
 #include "SDL_keycode.h"
 
+#include "SmartToggle.h"
 
 static float look_pitch_mouse,look_pitch_abs,look_pitch_joy;
 static float look_yaw_mouse,look_yaw_joy;;
@@ -51,6 +52,11 @@ void KeyUpPort (kbutton_t *b)
 void KeyDownPort (kbutton_t *b)
 {
 	b->state |= 1 + 2; // down + impulse down
+}
+
+static int KeyIsDown (kbutton_t *b)
+{
+    return b->state & 0x1;
 }
 
 static int scoresShown = 0;
@@ -129,6 +135,13 @@ void PortableAction(int state, int action)
         case PORT_ACT_DOWN:
             (state)?KeyDownPort(&in_crouch):KeyUpPort(&in_crouch);
             break;
+        case PORT_ACT_TOGGLE_CROUCH:
+            {
+                static SmartToggle_t smartToggle;
+                int activate = SmartToggleAction( &smartToggle, state, KeyIsDown(&in_crouch));
+                (activate)?KeyDownPort(&in_crouch):KeyUpPort(&in_crouch);
+                break;
+            }
         case PORT_ACT_WEAP1:
             if ( state )
                 PortableCommand("impulse 1\n");
