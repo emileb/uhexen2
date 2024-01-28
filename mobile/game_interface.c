@@ -218,14 +218,12 @@ void PortableAction(int state, int action)
             // -------------------------------------
 		case PORT_ACT_QUICKSAVE:
 			if(state) {
-				PortableKeyEvent(1, SDL_SCANCODE_F6, 0);
-				PortableKeyEvent(0, SDL_SCANCODE_F6, 0);
+                PortableCommand("save quick\n");
 			}
 			break;
 		case PORT_ACT_QUICKLOAD:
 			if(state) {
-				PortableKeyEvent(1, SDL_SCANCODE_F9, 0);
-				PortableKeyEvent(0, SDL_SCANCODE_F9, 0);
+                PortableCommand("load quick\n");
 			}
 			break;
         case PORT_ACT_CONSOLE:
@@ -359,10 +357,20 @@ void IN_Move_Android (usercmd_t *cmd)
     int blockMove = blockGamepad() & ANALOGUE_AXIS_FWD;
     int blockLook = blockGamepad() & ANALOGUE_AXIS_PITCH;
 
+    int fwdSpeed =  cl_forwardspeed.value;
+    int sideSpeed = cl_sidespeed.value;
+
+    int isPlayerRunning();
+    if(!isPlayerRunning())
+    {
+        fwdSpeed = fwdSpeed / 2;
+        sideSpeed = sideSpeed /2;
+    }
+
     if( !blockMove )
     {
-	    cmd->forwardmove += forwardmove * cl_forwardspeed.value;
-	    cmd->sidemove  += sidemove   * cl_sidespeed.value;
+        cmd->forwardmove += forwardmove * fwdSpeed;
+        cmd->sidemove  += sidemove * sideSpeed;
     }
 
     if( !blockLook )
