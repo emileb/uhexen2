@@ -75,6 +75,9 @@ void LOG_Print (const char *logdata)
 	if (log_fd == -1)
 		return;
 
+#ifdef __ANDROID__
+    LOGI("%s",logdata);
+#endif
 	write (log_fd, logdata, strlen(logdata));
 }
 #endif

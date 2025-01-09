@@ -899,6 +899,11 @@ int CL_ReadFromServer (void)
 	return 0;
 }
 
+#ifdef __ANDROID__
+void IN_Move_Android (usercmd_t *cmd);
+#endif
+
+
 /*
 =================
 CL_SendCmd
@@ -918,7 +923,9 @@ void CL_SendCmd (void)
 
 	// allow mice or other external controllers to add to the move
 		IN_Move (&cmd);
-
+#ifdef __ANDROID__
+        IN_Move_Android (&cmd);
+#endif
 	// send the unreliable message
 		CL_SendMove (&cmd);
 	}

@@ -61,6 +61,9 @@ static char	fs_gamedir[MAX_OSPATH];
 static char	fs_userdir[MAX_OSPATH];
 char	fs_gamedir_nopath[MAX_QPATH];
 
+#ifdef __ANDROID__
+static char	fs_cddir[MAX_OSPATH];
+#endif
 unsigned int	gameflags;
 
 cvar_t	oem = {"oem", "0", CVAR_ROM};
@@ -364,6 +367,26 @@ static void FS_AddGameDirectory (const char *dir, qboolean base_fs)
 	if (fs_searchpaths)
 		path_id = fs_searchpaths->path_id << 1;
 	else	path_id = 1U;
+
+#ifdef __ANDROID__
+	i = COM_CheckParm ("-cddir");
+	if (i && i < com_argc-1)
+	{
+		char* cddir = com_argv[i+1];
+		for (i = 0; i < 10; i++)
+        {
+            q_snprintf (pakfile, sizeof(pakfile), "%s/%s/pak%i.pak",cddir, dir, i);
+
+            pak = FS_LoadPackFile (pakfile, i, base_fs);
+            if (!pak) continue;
+            search = (searchpath_t *) Z_Malloc (sizeof(searchpath_t), Z_MAINZONE);
+            search->path_id = path_id;
+            search->pack = pak;
+            search->next = fs_searchpaths;
+            fs_searchpaths = search;
+        }
+	}
+#endif
 
 #if DO_USERDIRS
 add_pakfile:

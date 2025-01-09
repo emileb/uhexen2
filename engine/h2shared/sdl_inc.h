@@ -27,6 +27,10 @@
 #error "SDLQUAKE must be defined in order to use sdl_inc.h"
 #endif	/* SDLQUAKE */
 
+#ifdef __ANDROID__
+#define SDL2_COMPAT
+#endif
+
 #if defined(SDL_FRAMEWORK) || defined(NO_SDL_CONFIG)
 #include <SDL/SDL.h>
 #else
