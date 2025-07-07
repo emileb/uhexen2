@@ -8,15 +8,18 @@
 #include "SDL_keycode.h"
 
 #include "SmartToggle.h"
+#include "CStringFifo.h"
 
 static float look_pitch_mouse,look_pitch_abs,look_pitch_joy;
 static float look_yaw_mouse,look_yaw_joy;;
+static CStringFIFO m_CmdFifo;
 
 
 int main_android (int c, const char **v);
 void PortableInit(int argc,const char ** argv)
 {
 	LOGI("PortableInit");
+    cstr_fifo_init(&m_CmdFifo);
 
 	setenv("TIMIDITY_CFG", "midi/timidity.cfg",1);
 
@@ -244,14 +247,10 @@ void PortableAction(int state, int action)
 	}
 }
 
-static const char * quickCommand = 0;
 void PortableCommand(const char * cmd)
 {
-	static char cmdBuffer[256];
-	snprintf(cmdBuffer, 256, "%s", cmd);
-	quickCommand = cmdBuffer;
+    cstr_fifo_push(&m_CmdFifo, cmd);
 }
-
 
 
 extern int key_dest;
@@ -341,24 +340,40 @@ void PortableLookYaw(int mode, float yaw)
 	}
 }
 
+bool PortableSetAlwaysRun(bool run)
+{
+    if(run)
+    {
+        PortableCommand("cl_forwardspeed 400\n");
+        PortableCommand("cl_backspeed 400\n");
+    }
+    else
+    {
+        PortableCommand("cl_forwardspeed 200\n");
+        PortableCommand("cl_backspeed 200\n");
+    }
+    return false;
+}
+
 /////////////////////
 // Movement handling
 ////
 
 void IN_Move_Android (usercmd_t *cmd)
 {
-	if (quickCommand)
-	{
-		Cmd_ExecuteString(quickCommand,src_command);
-		quickCommand = 0;
-	}
+    char *consoleCmd;
+    while((consoleCmd = cstr_fifo_pop(&m_CmdFifo)))
+    {
+        Cmd_ExecuteString(consoleCmd, src_command);
+        free(consoleCmd);
+    }
 
     int blockGamepad( void );
     int blockMove = blockGamepad() & ANALOGUE_AXIS_FWD;
     int blockLook = blockGamepad() & ANALOGUE_AXIS_PITCH;
 
-    int fwdSpeed =  cl_forwardspeed.value;
-    int sideSpeed = cl_sidespeed.value;
+    int fwdSpeed =  400;
+    int sideSpeed = 400;
 
     int isPlayerRunning();
     if(!isPlayerRunning())
